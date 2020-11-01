@@ -1,4 +1,10 @@
 # nas_fan_control
+Forked from @khorton's Fan Control scripts repository to keep my current settings
+since the config file didn't contain all settings I needed to modify
+
+======================================================================================
+Original README:
+======================================================================================
 collection of scripts to control fan speed on NAS boxes
 
 PID_fan_control.pl - Perl fan control script based on the hybrid fan control script created by @Stux, and posted at:

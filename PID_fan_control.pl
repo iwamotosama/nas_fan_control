@@ -1,5 +1,18 @@
 #!/usr/local/bin/perl
 
+#################################################
+# Settings updated for my configuration
+#  Supermicro 36bay chassis
+#  Supermicro X11SSL-CF with Pentium G4560
+#
+#  7x 7000rpm PWM fans connected (with Y splitters) to FAN1 -> FAN4
+#  1x Noctua L9i cooler connected to FANA
+#  HD fans can provide help for cpu, but cpu cooler does not help HDs
+#
+#  Max HD temp 50degC
+#  Target warmest HD temp avg 42degC
+#################################################
+
 # This script is based on the hybrid fan controller script created by @Stux, and posted at:
 # https://forums.freenas.org/index.php?threads/script-hybrid-cpu-hd-fan-zone-controller.46159/
 
@@ -142,11 +155,11 @@ $config_file = '/root/nas_fan_control/PID_fan_control_config.ini';
 
 ##DEFAULT VALUES
 ## Use the values declared below if the config file is not present
-$hd_ave_target = 38;         # PID control loop will target this average temperature for the warmest N disks
+$hd_ave_target = 42;         # PID control loop will target this average temperature for the warmest N disks
 $Kp = 16/3;                  # PID control loop proportional gain
 $Ki = 0;                     # PID control loop integral gain
 $Kd = 24;                    # PID control loop derivative gain
-$hd_num_peak = 2;            # Number of warmest HDs to use when calculating average temp
+$hd_num_peak = 4;            # Number of warmest HDs to use when calculating average temp
 $hd_fan_duty_start     = 60; # HD fan duty cycle when script starts
 
 ## DEBUG LEVEL
@@ -174,7 +187,7 @@ $low_cpu_temp  = 35;       # will go LOW when we fall below 35 again
 ## more silent your system.
 ## Note, it is possible for your HDs to go above this... but if your cooling is good, they shouldn't.
 # $hd_ave_target = 38.0;   # define this value in the DEFAULT VALUES block at top of script
-$hd_max_allowed_temp = 40; # celsius. PID control aborts and fans set to 100% duty cycle when a HD hits this temp.
+$hd_max_allowed_temp = 50; # celsius. PID control aborts and fans set to 100% duty cycle when a HD hits this temp.
                            # This ensures that no matter how poorly chosen the PID gains are, or how much of a spread
                            # there is between the average HD temperature and the maximum HD temperature, the HD fans 
                            # will be set to 100% if any drive reaches this temperature.
@@ -195,7 +208,7 @@ $cpu_hd_override_temp = 65;
 $hd_fans_cool_cpu = 1;      # 1 if the hd fans should spin up to cool the cpu, 0 otherwise
 
 ## HD FAN DUTY CYCLE TO OVERRIDE CPU FANS
-$cpu_fans_cool_hd            = 1;  # 1 if the CPU fans should spin up to cool the HDs, when needed.  0 otherwise.  This may be 
+$cpu_fans_cool_hd            = 0;  # 1 if the CPU fans should spin up to cool the HDs, when needed.  0 otherwise.  This may be 
                                    #   useful if the CPU fan zone also contains chassis exit fans, as an increase in chassis exit 
                                    #   fan speed may increase the HD cooling air flow.
 $hd_cpu_override_duty_cycle = 95;  # when the HD duty cycle equals or exceeds this value, the CPU fans may be overridden to help cool HDs
@@ -223,8 +236,8 @@ $cpu_temp_control = 1;  # 1 if the script will control a CPU fan to control CPU 
 ## You need to determine the actual max fan speeds that are achieved by the fans
 ## Connected to the cpu_fan_header and the hd_fan_header.
 ## These values are used to verify high/low fan speeds and trigger a BMC reset if necessary.
-$cpu_max_fan_speed    = 1800;
-$hd_max_fan_speed     = 3300;
+$cpu_max_fan_speed    = 2500;
+$hd_max_fan_speed     = 7000;
 
 
 ## CPU FAN DUTY LEVELS
@@ -249,17 +262,17 @@ $hd_fan_duty_low       =  16;    # some 120mm fans stall below 30.
 #
 # 0 = FAN1..5
 # 1 = FANA..FANC
-$cpu_fan_zone = 0;
-$hd_fan_zone  = 1;
+$cpu_fan_zone = 1;
+$hd_fan_zone  = 0;
 
 
 ## FAN HEADERS
 ## these are the fan headers which are used to verify the fan zone is high. FAN1+ are all in Zone 0, FANA is Zone 1.
 ## cpu_fan_header should be in the cpu_fan_zone
 ## hd_fan_header should be in the hd_fan_zone
-$cpu_fan_header = "FAN2";                 # used for printing to standard output for debugging   
-$hd_fan_header  = "FANB";                 # used for printing to standard output for debugging   
-@hd_fan_list = ("FANA", "FANB", "FANC");  # used for logging to file  
+$cpu_fan_header = "FANA";                 # used for printing to standard output for debugging   
+$hd_fan_header  = "FAN1";                 # used for printing to standard output for debugging   
+@hd_fan_list = ("FAN1", "FAN2", "FAN3", "FAN4");  # used for logging to file  
 
 
 ################
