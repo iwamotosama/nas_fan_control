@@ -1,6 +1,12 @@
 # nas_fan_control
-Forked from @khorton's Fan Control scripts repository to keep my current settings
-since the config file didn't contain all settings I needed to modify
+Forked from @khorton's Fan Control scripts repository to keep my current settings since the config file didn't contain all settings I needed to modify (the main one being HD fans on zone 0 (FAN1...4) and CPU fan on zone 1 (FANA)).
+
+Config details:
+*  Supermicro 36bay 4U chassis
+*  Supermicro X11SSL-CF with Pentium G4560
+*  7x 7000rpm 80mm supermicro PWM fans connected (with 3x Y splitters) to FAN1 -> FAN4
+*  1x Noctua L9i cooler connected to FANA
+*  HD fans can provide help for cpu, but cpu cooler does not help HDs
 
 ----------------------------------------------------------------------------
 
